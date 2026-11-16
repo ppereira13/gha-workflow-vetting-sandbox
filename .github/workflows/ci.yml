@@ -27,3 +27,6 @@ jobs:
 
       - name: Run tests
         run: python -m pytest -v
+
+      - name: Audit the workflows with zizmor
+        run: zizmor .github/workflows/

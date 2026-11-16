@@ -1,0 +1,23 @@
+# Deliberately insecure workflow, used only as input for the vetting tool.
+# It lives outside .github/workflows, so GitHub never runs it.
+name: Vulnerable example
+
+on:
+  pull_request_target:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Greet the contributor
+        run: |
+          echo "Thanks for the PR: ${{ github.event.pull_request.title }}"
+
+      - name: Deploy
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: ./deploy.sh
