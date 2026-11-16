@@ -108,8 +108,9 @@ vagrant up          # create the VM, provision it and print the findings
 vagrant destroy -f  # throw everything away
 ```
 
-It needs VirtualBox and Vagrant. The `Vagrantfile` uses an Ubuntu 24.04 box I built
-locally; any Ubuntu 24.04 box should work by changing `config.vm.box`. Only the static
+It needs VirtualBox and Vagrant. The `Vagrantfile` points to an Ubuntu 24.04 box
+that I already had on my machine, so it is not downloadable. Change `config.vm.box` to
+a public Ubuntu 24.04 box to reproduce it (I have not tested other boxes). Only the static
 analysis runs in the VM for now. The LLM step still runs on the host.
 
 ## What I observed

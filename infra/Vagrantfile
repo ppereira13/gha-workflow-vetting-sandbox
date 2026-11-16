@@ -1,6 +1,6 @@
 # Disposable VM that runs the static analysis inside a Docker container.
 Vagrant.configure("2") do |config|
-  # Ubuntu 24.04 box built locally. Any Ubuntu 24.04 box should work here.
+  # Local Ubuntu 24.04 box. Replace with a public Ubuntu 24.04 box to reproduce.
   config.vm.box = "local-ubuntu-24.04"
   config.vm.hostname = "vetting-sandbox"
 
