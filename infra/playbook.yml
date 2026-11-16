@@ -1,0 +1,39 @@
+- name: Audit a workflow inside a Docker container
+  hosts: all
+  become: true
+
+  vars:
+    image: zizmor-sandbox
+    workflow: vulnerable.yml
+
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: true
+
+    - name: Make sure Docker is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Build the analysis image
+      ansible.builtin.command: docker build -t {{ image }} /workspace/infra
+      changed_when: true
+
+    # No network and read-only mounts: the container can only read the workflow.
+    - name: Run zizmor on the example workflow
+      ansible.builtin.command: >
+        docker run --rm --network none --read-only
+        -v /workspace/examples:/work:ro
+        {{ image }} --offline --no-progress /work/{{ workflow }}
+      register: audit
+      changed_when: false
+      # zizmor exits with 10 to 14 when it has findings. That is a result, not an error.
+      failed_when: audit.rc not in [0, 10, 11, 12, 13, 14]
+
+    - name: Show the findings
+      ansible.builtin.debug:
+        msg: "{{ audit.stdout_lines }}"
